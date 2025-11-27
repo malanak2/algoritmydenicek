@@ -302,6 +302,9 @@ Datum: %s
 				if index >= l.Len() {
 					index--
 				}
+				if index < 0 {
+					index = 0
+				}
 			case "zavri":
 				return
 			default:
