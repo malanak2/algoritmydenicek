@@ -208,6 +208,11 @@ Počet záznamů: %d
 		case "command":
 			if l.Len() != 0 {
 				entr := l.atIndex(index)
+				if entr == nil {
+					msg = "Chyba při načítání záznamu."
+					currentOperation = "command"
+					continue
+				}
 				fmt.Printf(`
 Datum: %s
 
@@ -251,6 +256,9 @@ Datum: %s
 				l.addLast(newEntry)
 				newEntry = Entry{}
 				index++
+				if l.Len() == 1 {
+					index = 0
+				}
 				currentOperation = "command"
 				continue
 			}
@@ -272,6 +280,13 @@ Datum: %s
 					continue
 				}
 				index--
+				if index < 0 {
+					index = 0
+				}
+			case "zacatek":
+				index = 0
+			case "konec":
+				index = l.Len() - 1
 				if index < 0 {
 					index = 0
 				}
