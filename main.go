@@ -158,7 +158,10 @@ func (l *List) Last() *Entry {
 }
 
 var (
-	l *List
+	l                *List
+	currentOperation string
+	msg              string
+	index            int
 )
 
 func (l *List) atIndex(indx int) *Entry {
@@ -177,25 +180,25 @@ func (l *List) atIndex(indx int) *Entry {
 }
 func main() {
 	l = &List{}
-	msg := ""
+	msg = ""
 	newEntry := Entry{}
-	currentOperation := "command"
-	index := 0
+	currentOperation = "command"
+	index = 0
 	for {
-		fmt.Print("\033[H\033[2J")                                  // clear term
-		fmt.Printf("%s %s %d\n", currentOperation, "index:", index) // debug
+		fmt.Print("\033[H\033[2J")                             // clear term
+		fmt.Printf("%s, index: %d\n", currentOperation, index) // debug
 		if msg != "" {
 			fmt.Print(msg + "\n")
 			msg = ""
 		}
-		l.debugLog()
+		//l.debugLog()
 		fmt.Printf(`
 ---------------------------------
 Deník se ovládá následujícími příkazy:
 - predchozi: Přesunutí na předchozí záznam
 - dalsi: Přesunutí na další záznam
-- zacatek - přenese mě na první záznam
-- konec – přenese mě na poslední záznam
+- zacatek: přenese mě na první záznam
+- konec: přenese mě na poslední záznam
 - novy: Vytvoření nového záznamu
 - uloz: Uložení vytvořeného záznamu
 - smaz: Odstranění záznamu
@@ -255,8 +258,8 @@ Datum: %s
 			if line == "uloz" {
 				l.addLast(newEntry)
 				newEntry = Entry{}
-				index++
-				if l.Len() == 1 {
+				index = l.Len() - 1
+				if index < 0 {
 					index = 0
 				}
 				currentOperation = "command"
@@ -306,6 +309,5 @@ Datum: %s
 				fmt.Printf("%s", line)
 			}
 		}
-
 	}
 }
